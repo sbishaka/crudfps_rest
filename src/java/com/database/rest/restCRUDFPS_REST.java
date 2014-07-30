@@ -28,6 +28,13 @@ public class restCRUDFPS_REST {
         this._SYS = new restCRUDFPS(_SESS);
     }
 
+    
+    public boolean create_Student(String _dto_student)
+    {
+        Dto_Student dto_student = JSON.fromJson(_dto_student, Dto_Student.class);
+        return create_Student(dto_student);
+    }
+    
     public boolean create_Student(Dto_Student dto_student)
     {
         Student student = dto_student.toHib();
