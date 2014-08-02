@@ -21,7 +21,7 @@ import org.hibernate.Session;
  *
  * @author USER
  */
-@WebServlet(name = "R_restCRUDFPS_REST", urlPatterns = {"/crud/*"})
+@WebServlet(name = "R_restCRUDFPS_REST", urlPatterns = {"/crud/*"}, loadOnStartup = 1)
 public class R_restCRUDFPS_REST extends HttpServlet {
     
     private Session _SESS;
@@ -61,7 +61,11 @@ public class R_restCRUDFPS_REST extends HttpServlet {
         else if(path.equals(R_routes.route_update_Student_S))
         {
             sys.update_Student_S(request, response);
-        }        
+        }
+        else if(path.startsWith(R_routes.route_delete_Student_S))
+        {
+            sys.delete_Student_S(request, response);
+        }
         else
         {
             sys.print_info(request, response);

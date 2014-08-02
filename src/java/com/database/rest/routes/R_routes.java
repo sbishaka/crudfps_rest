@@ -19,4 +19,6 @@ public interface R_routes {
     final String route_read_Student = "student/r";
 
     final String route_update_Student_S = "student/u/s";
+    
+    final String route_delete_Student_S = "student/d/s";
 }

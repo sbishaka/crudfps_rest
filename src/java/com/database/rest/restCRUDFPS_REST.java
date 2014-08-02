@@ -265,6 +265,78 @@ public class restCRUDFPS_REST {
         }
         return true;
     }
+
+    public void delete_Student_S(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+
+        System.out.println("In delete student");
+        String _id = request
+                    .getPathInfo()
+                    .substring(1).replace(R_routes.route_delete_Student_S, "")
+                    .replace("/", "");
+        
+        int id = -1;
+
+        try{
+            id = Integer.parseInt(_id);
+        }catch(NumberFormatException nfe)
+        {
+            sendTo(request, response, "/crud");
+            return;
+        }
+
+        
+        boolean result = false;
+        try{
+            result = delete_Student(id);
+        }
+        catch(NullPointerException npe)
+        {
+            Msg info = new Msg("delete_Student_S", "failed because of empty (msg) parameter");
+            npe.printStackTrace();
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+            return; 
+        }
+        catch( PropertyValueException pve )
+        {
+            Msg info = new Msg("delete_Student_S", "failed because a property which shouldn't be null is null");
+
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+            return;         
+        }
+        catch(JsonSyntaxException jse)
+        {
+            Msg info = new Msg("delete_Student_S", "failed because server recieved a malformed json string");
+
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+            return;                
+        }
+        catch(IllegalArgumentException iae)
+        {
+            Msg info = new Msg("delete_Student_S", "failed because server did not find an entry with id : " + id);
+
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+            return;                        
+        }
+
+        if(result)
+        {
+            Msg info = new Msg("delete_Student_S", "success");
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+        }
+        else
+        {
+            Msg info = new Msg("delete_Student_S", "failed");
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));        
+        }
+                
+    }    
     
     public boolean delete_Student(int _id)
     {
@@ -294,14 +366,16 @@ public class restCRUDFPS_REST {
     
        List<Dto_Info> info = new ArrayList<Dto_Info>();       
 
-       info.add(new Dto_Info("/"+R_routes.route_create_Student_S+"?msg=:dto_student", "create_Student_S(:dto_student)"));
-       info.add(new Dto_Info("/"+R_routes.route_create_Student_M+"?msg=:dto_students", "create_Student_M(:dto_students)"));
+       info.add(new Dto_Info("/"+R_routes.route_create_Student_S+"?msg=:student", "create_Student_S(:student)"));
+       info.add(new Dto_Info("/"+R_routes.route_create_Student_M+"?msg=:students", "create_Student_M(:students)"));
        
        info.add(new Dto_Info("/"+R_routes.route_read_All_Student, "read_All_Student()"));
-       info.add(new Dto_Info("/"+R_routes.route_read_Student+"/:id", "read_Student(id)"));
+       info.add(new Dto_Info("/"+R_routes.route_read_Student+"/:id", "read_Student(:id)"));
        
-       info.add(new Dto_Info("/"+R_routes.route_update_Student_S+"?msg=:dto_student", "update_Student_S(:dto_student)"));
+       info.add(new Dto_Info("/"+R_routes.route_update_Student_S+"?msg=:student", "update_Student_S(:student)"));
        
+       info.add(new Dto_Info("/"+R_routes.route_delete_Student_S+"/:id", "delete_Student_S(:id)"));
+
        response.setContentType("application/json");
        response.getWriter().print(JSON.toJson(info));
        
