@@ -8,11 +8,17 @@ package com.database.rest;
 
 import com.database.crudfps.restCRUDFPS;
 import com.database.hibernate.Student;
+import com.database.rest.dto.Dto_Info;
 import com.database.rest.dto.Dto_Student;
 import com.database.rest.dto.Dto_Student_Update;
+import com.database.rest.routes.R_routes;
 import com.google.gson.Gson;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 /**
@@ -27,7 +33,6 @@ public class restCRUDFPS_REST {
     public restCRUDFPS_REST(Session _SESS) {
         this._SYS = new restCRUDFPS(_SESS);
     }
-
     
     public boolean create_Student(String _dto_student)
     {
@@ -70,6 +75,11 @@ public class restCRUDFPS_REST {
         
         return this.JSON.toJson(dto_students);
     }
+
+    public void read_All_Student(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.getWriter().print(read_All_Student());
+    }    
     
     public boolean update_Student( Dto_Student_Update _dto_student_update )
     {
@@ -102,5 +112,16 @@ public class restCRUDFPS_REST {
     {
         this._SYS.shutdown();
     }    
+
+    public void print_info(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    
+       List<Dto_Info> info = new ArrayList<Dto_Info>();       
+       
+       info.add(new Dto_Info("/"+R_routes.route_read_All_Student, "read_All_Student()"));
+       
+       response.getWriter().print(JSON.toJson(info));
+       
+     }   
     
 }
