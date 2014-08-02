@@ -64,6 +64,27 @@ public class restCRUDFPS_REST {
         return this.JSON.toJson(dto_student);
     }
 
+    public void read_Student(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        
+        String _id = request
+                    .getPathInfo()
+                    .substring(1).replace(R_routes.route_read_Student, "")
+                    .replace("/", "");
+        
+        int id = -1;
+        
+        try{
+            id = Integer.parseInt(_id);
+        }catch(NumberFormatException nfe)
+        {
+            sendTo(request, response, "/crud");
+            return;
+        }
+        
+        response.getWriter().print(read_Student(id));
+    }
+    
     public String read_All_Student()
     {
         List<Student> students = this._SYS.read_All_Student();
@@ -119,9 +140,15 @@ public class restCRUDFPS_REST {
        List<Dto_Info> info = new ArrayList<Dto_Info>();       
        
        info.add(new Dto_Info("/"+R_routes.route_read_All_Student, "read_All_Student()"));
+       info.add(new Dto_Info("/"+R_routes.route_read_Student+"/:id", "read_Student(id)"));
        
        response.getWriter().print(JSON.toJson(info));
        
      }   
+    
+    
+    private void sendTo(HttpServletRequest request, HttpServletResponse response, String url) throws ServletException, IOException {
+            request.getRequestDispatcher(url).forward(request, response);
+    }	
     
 }

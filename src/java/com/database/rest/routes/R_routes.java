@@ -13,5 +13,6 @@ package com.database.rest.routes;
 public interface R_routes {
     
     final String route_read_All_Student = "student";
+    final String route_read_Student = "student/r";
     
 }

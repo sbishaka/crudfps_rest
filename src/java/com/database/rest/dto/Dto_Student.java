@@ -23,8 +23,21 @@ public class Dto_Student extends Dto_Entry{
     }
     
     public Dto_Student(Student student){
-        this.name = student.getName();
-        this.id = (isGarbage(student.getId()))? "":student.getId()+"";
+        
+            try{
+                this.name = (isGarbage(student.getName()))? "":student.getName()+"";
+            }catch(NullPointerException npe)
+            {
+                this.name = "";
+            }
+            
+            try{
+                this.id = (isGarbage(student.getId()))? "":student.getId()+"";
+            }
+            catch(NullPointerException npe)
+            {
+                this.id = "";
+            }
     }
     
     public String getName() {

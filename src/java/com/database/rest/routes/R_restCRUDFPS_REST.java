@@ -42,17 +42,19 @@ public class R_restCRUDFPS_REST extends HttpServlet {
             path = "info";
         }
         
-        switch(path)
+        if( path.equals(R_routes.route_read_All_Student) )
         {
-            case R_routes.route_read_All_Student:
-                sys.read_All_Student(request, response);
-            break;
-            
-            default:
-                sys.print_info(request, response);
-            break;
+            sys.read_All_Student(request, response);
         }
-        
+        else if( path.startsWith(R_routes.route_read_Student) )
+        {
+            sys.read_Student(request, response);
+        }
+        else
+        {
+            sys.print_info(request, response);
+        }
+            
         _SESS.close();
     }
 
