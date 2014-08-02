@@ -57,6 +57,10 @@ public class R_restCRUDFPS_REST extends HttpServlet {
         else if(path.equals(R_routes.route_create_Student_M))
         {
             sys.create_Student_M(request, response);
+        }
+        else if(path.equals(R_routes.route_update_Student_S))
+        {
+            sys.update_Student_S(request, response);
         }        
         else
         {

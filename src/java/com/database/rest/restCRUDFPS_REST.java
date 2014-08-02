@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -192,12 +193,76 @@ public class restCRUDFPS_REST {
         response.getWriter().print(read_All_Student());
     }    
     
+    public void update_Student_S(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+
+        String msg = request.getParameter("msg");
+        boolean result = false;
+        try{
+            result = update_Student_S(msg);
+        }
+        catch(NullPointerException npe)
+        {
+            Msg info = new Msg("update_Student_S", "failed because of empty (msg) parameter");
+            npe.printStackTrace();
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+            return; 
+        }
+        catch( PropertyValueException pve )
+        {
+            Msg info = new Msg("update_Student_S", "failed because a property which shouldn't be null is null");
+
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+            return;         
+        }
+        catch(JsonSyntaxException jse)
+        {
+            Msg info = new Msg("update_Student_S", "failed because server recieved a malformed json string");
+
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+            return;                
+        }
+
+        if(result)
+        {
+            Msg info = new Msg("update_Student_S", "success");
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+        }
+        else
+        {
+            Msg info = new Msg("update_Student_S", "failed");
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));        
+        }
+        
+
+    }        
+    
+    
+    public boolean update_Student_S( String _dto_student )
+    {
+        Dto_Student dto_student = JSON.fromJson(_dto_student, Dto_Student.class);
+        Dto_Student_Update dto_student_update = new Dto_Student_Update(dto_student);        
+        return update_Student(dto_student_update);
+    }
+    
     public boolean update_Student( Dto_Student_Update _dto_student_update )
     {
         Dto_Student_Update dto_student_update = _dto_student_update;
         Integer id = Integer.parseInt(dto_student_update.getId());
         Student student = dto_student_update.getDto_student().toHib();
-        this._SYS.update_Student(id, student.getName());
+        try{
+            this._SYS.update_Student(id, student.getName());
+        }
+        catch(NullPointerException npe)
+        {
+            //Failed to find object attached to id passed
+            return false;
+        }
         return true;
     }
     
@@ -228,11 +293,14 @@ public class restCRUDFPS_REST {
             throws ServletException, IOException {
     
        List<Dto_Info> info = new ArrayList<Dto_Info>();       
+
+       info.add(new Dto_Info("/"+R_routes.route_create_Student_S+"?msg=:dto_student", "create_Student_S(:dto_student)"));
+       info.add(new Dto_Info("/"+R_routes.route_create_Student_M+"?msg=:dto_students", "create_Student_M(:dto_students)"));
        
        info.add(new Dto_Info("/"+R_routes.route_read_All_Student, "read_All_Student()"));
        info.add(new Dto_Info("/"+R_routes.route_read_Student+"/:id", "read_Student(id)"));
-       info.add(new Dto_Info("/"+R_routes.route_create_Student_S+"?msg=:dto_student", "create_Student_S(:dto_student)"));
-       info.add(new Dto_Info("/"+R_routes.route_create_Student_M+"?msg=:dto_students", "create_Student_M(:dto_students)"));
+       
+       info.add(new Dto_Info("/"+R_routes.route_update_Student_S+"?msg=:dto_student", "update_Student_S(:dto_student)"));
        
        response.setContentType("application/json");
        response.getWriter().print(JSON.toJson(info));

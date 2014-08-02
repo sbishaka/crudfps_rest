@@ -32,7 +32,7 @@ public class Dto_Student extends Dto_Entry{
             }
             
             try{
-                this.id = (isGarbage(student.getId()))? "":student.getId()+"";
+            this.id = (isGarbage(student.getId()))? "":student.getId()+"";
             }
             catch(NullPointerException npe)
             {

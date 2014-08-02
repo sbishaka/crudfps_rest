@@ -14,23 +14,20 @@ import com.database.hibernate.Student;
  */
 public class Dto_Student_Update extends Dto_Entry{
     
-    private String id;
-    private Dto_Student dto_student;
+    private final String id;
+    private final Dto_Student dto_student;
+
+    public Dto_Student_Update( Dto_Student _dto_student) {
+        this.dto_student = _dto_student;
+        this.id = _dto_student.getId();
+    }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public Dto_Student getDto_student() {
         return dto_student;
-    }
-
-    public void setDto_student(Dto_Student dto_student) {
-        this.dto_student = dto_student;
     }
     
 }
