@@ -14,7 +14,8 @@ public interface R_routes {
     
     final String route_read_All_Student = "student";
     final String route_read_Student = "student/r";
-    final String route_create_Student_Single = "student/c/s";
+    final String route_create_Student_S = "student/c/s";
+    final String route_create_Student_M = "student/c/m";
 
     
 }
