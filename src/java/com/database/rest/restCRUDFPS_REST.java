@@ -13,12 +13,14 @@ import com.database.rest.dto.Dto_Student;
 import com.database.rest.dto.Dto_Student_Update;
 import com.database.rest.routes.R_routes;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.hibernate.PropertyValueException;
 import org.hibernate.Session;
 
 /**
@@ -34,7 +36,46 @@ public class restCRUDFPS_REST {
         this._SYS = new restCRUDFPS(_SESS);
     }
     
-    public boolean create_Student(String _dto_student)
+    public void create_Student_S(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        
+        String msg = request.getParameter("msg");
+        try{
+            create_Student_S(msg);
+        }
+        catch(NullPointerException npe)
+        {
+            Msg info = new Msg("create_Student_S", "failed because of empty (msg) parameter");
+
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+            return; 
+        }
+        catch( PropertyValueException pve )
+        {
+            Msg info = new Msg("create_Student_S", "failed because a property which shouldn't be null is null");
+
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+            return;         
+        }
+        catch(JsonSyntaxException jse)
+        {
+            Msg info = new Msg("create_Student_S", "failed because server recieved a malformed json string");
+
+            response.setContentType("application/json");
+            response.getWriter().print(JSON.toJson(info));
+            return;                
+        }
+        
+        Msg info = new Msg("create_Student_S", "success");
+        
+        response.setContentType("application/json");
+        response.getWriter().print(JSON.toJson(info));
+        
+    }
+    
+    public boolean create_Student_S(String _dto_student)
     {
         Dto_Student dto_student = JSON.fromJson(_dto_student, Dto_Student.class);
         return create_Student(dto_student);
@@ -82,6 +123,7 @@ public class restCRUDFPS_REST {
             return;
         }
         
+        response.setContentType("application/json");
         response.getWriter().print(read_Student(id));
     }
     
@@ -99,6 +141,7 @@ public class restCRUDFPS_REST {
 
     public void read_All_Student(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("application/json");
         response.getWriter().print(read_All_Student());
     }    
     
@@ -141,7 +184,9 @@ public class restCRUDFPS_REST {
        
        info.add(new Dto_Info("/"+R_routes.route_read_All_Student, "read_All_Student()"));
        info.add(new Dto_Info("/"+R_routes.route_read_Student+"/:id", "read_Student(id)"));
+       info.add(new Dto_Info("/"+R_routes.route_create_Student_Single+"?msg=:dto_student", "create_Student(:dto_student)"));
        
+       response.setContentType("application/json");
        response.getWriter().print(JSON.toJson(info));
        
      }   
