@@ -1,28 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package com.database.rest.dto;
+package com.database.rest.models;
 
 import com.database.hibernate.Student;
 
-/**
- *
- * @author USER
- */
-public class Dto_Student extends Dto_Entry{
+public class M_Student extends M_Entry{
     
     private String id;
     private String name;
 
-    public Dto_Student() 
+    public M_Student() 
     {
     
     }
     
-    public Dto_Student(Student student){
+    public M_Student( Student student){
         
             try{
                 this.name = (isGarbage(student.getName()))? "":student.getName()+"";
@@ -61,14 +51,12 @@ public class Dto_Student extends Dto_Entry{
         Student buff = new Student();
         buff.setName(this.getName());
         
-        if( !isGarbage(
-                this.getId()) )
+        if( !isGarbage(this.getId()) )
         {
-            buff.setId(Integer.parseInt(
-                    this.getId()
+            buff.setId(Integer.parseInt(this.getId()
             ));
         }
-        
+         
         return buff;
     }
 }

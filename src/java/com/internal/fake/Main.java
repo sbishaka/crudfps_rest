@@ -8,8 +8,8 @@ package com.internal.fake;
 
 import com.database.hibernate.Student;
 import com.database.hibernateUtil.HibernateUtil;
-import com.database.rest.dto.Dto_Student;
-import com.database.rest.dto.Dto_Student_Update;
+import com.database.rest.models.M_Student;
+import com.database.rest.models.M_Student_Update;
 import com.database.rest.restCRUDFPS_REST;
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class Main {
       Gson JSON = new Gson();
       String json = "{\"id\":\"1\",\"dto_student\":{\"name\":\"Bishaka Samuel\"}}";
       
-      Dto_Student_Update up = JSON.fromJson(json, Dto_Student_Update.class);
+      M_Student_Update up = JSON.fromJson(json, M_Student_Update.class);
       sys.update_Student(up);
       
       sys.shutdown();

@@ -25,22 +25,29 @@ import java.util.logging.Logger;
 public class CrudfpsCreator {
     
     public enum IDES{
-        netbeans
+        netbeans,
+        netbeans_web
     }
     
     public static void construct(String name, IDES ide)
     {
+        List<Class> classes = null;
         switch(ide)
         {
             case netbeans:
-                List<Class> classes = ClassFinder.getClasses_netbeans("com.database.hibernate");
-                String result = create(name, "com.database.crudfps", classes);
-                write_netbeans(get_crudfps_Name(name), result);
+                classes = ClassFinder.getClasses_netbeans("com.database.hibernate");
+            break;
+            
+            case netbeans_web:
+                classes = ClassFinder.getClasses_netbeans_web("com.database.hibernate");
             break;
                 
             default:
             break;
         }
+        
+        String result = create(name, "com.database.crudfps", classes);
+        write_netbeans(get_crudfps_Name(name), result);
     }
     
     public static String create(String name, IDES ide)

@@ -1,16 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package com.database.rest;
 
+import com.database.rest.models.*;
 import com.database.crudfps.restCRUDFPS;
-import com.database.hibernate.Student;
-import com.database.rest.dto.Dto_Info;
-import com.database.rest.dto.Dto_Student;
-import com.database.rest.dto.Dto_Student_Update;
+import com.database.hibernate.*;
 import com.database.rest.routes.R_routes;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -47,7 +40,7 @@ public class restCRUDFPS_REST {
     }
     catch(NullPointerException npe)
     {
-        Msg info = new Msg("create_Student_S", "failed because of empty (msg) parameter");
+        M_Msg info = new M_Msg("create_Student_S", "failed because of empty (msg) parameter");
 
         response.setContentType("application/json");
         response.getWriter().print(JSON.toJson(info));
@@ -55,7 +48,7 @@ public class restCRUDFPS_REST {
     }
     catch( PropertyValueException pve )
     {
-        Msg info = new Msg("create_Student_S", "failed because a property which shouldn't be null is null");
+        M_Msg info = new M_Msg("create_Student_S", "failed because a property which shouldn't be null is null");
 
         response.setContentType("application/json");
         response.getWriter().print(JSON.toJson(info));
@@ -63,20 +56,19 @@ public class restCRUDFPS_REST {
     }
     catch(JsonSyntaxException jse)
     {
-        Msg info = new Msg("create_Student_S", "failed because server recieved a malformed json string");
+        M_Msg info = new M_Msg("create_Student_S", "failed because server recieved a malformed json string");
 
         response.setContentType("application/json");
         response.getWriter().print(JSON.toJson(info));
         return;                
     }
 
-    Msg info = new Msg("create_Student_S", "success");
+    M_Msg info = new M_Msg("create_Student_S", "success");
 
     response.setContentType("application/json");
     response.getWriter().print(JSON.toJson(info));
 
 }
-
     
     public void create_Student_M(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
@@ -87,7 +79,7 @@ public class restCRUDFPS_REST {
         }
         catch(NullPointerException npe)
         {
-            Msg info = new Msg("create_Student_M", "failed because of empty (msg) parameter");
+            M_Msg info = new M_Msg("create_Student_M", "failed because of empty (msg) parameter");
 
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
@@ -95,7 +87,7 @@ public class restCRUDFPS_REST {
         }
         catch( PropertyValueException pve )
         {
-            Msg info = new Msg("create_Student_M", "failed because a property which shouldn't be null is null");
+            M_Msg info = new M_Msg("create_Student_M", "failed because a property which shouldn't be null is null");
 
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
@@ -103,14 +95,14 @@ public class restCRUDFPS_REST {
         }
         catch(JsonSyntaxException jse)
         {
-            Msg info = new Msg("create_Student_M", "failed because server recieved a malformed json string");
+            M_Msg info = new M_Msg("create_Student_M", "failed because server recieved a malformed json string");
 
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
             return;                
         }
         
-        Msg info = new Msg("create_Student_M", "success");
+        M_Msg info = new M_Msg("create_Student_M", "success");
         
         response.setContentType("application/json");
         response.getWriter().print(JSON.toJson(info));
@@ -119,37 +111,39 @@ public class restCRUDFPS_REST {
     
     public boolean create_Student_S(String _dto_student)
     {
-        Dto_Student dto_student = JSON.fromJson(_dto_student, Dto_Student.class);
+        M_Student dto_student = JSON.fromJson(_dto_student, M_Student.class);
         return create_Student(dto_student);
     }
     
     public boolean create_Student_M(String _dto_students)
     {
-        List<Dto_Student> dto_students =  Arrays.asList(JSON.fromJson(_dto_students, Dto_Student[].class));
+        List<M_Student> dto_students =  Arrays.asList(JSON.fromJson(_dto_students, M_Student[].class));
         return create_Student(dto_students);
     }
     
-    public boolean create_Student(Dto_Student dto_student)
+    public boolean create_Student(M_Student dto_student)
     {
         Student student = dto_student.toHib();
         this._SYS.create_Student(student);
         return true;
     }
 
-    public boolean create_Student(List<Dto_Student> _dto_students)
+    public boolean create_Student(List<M_Student> _dto_students)
     {
-        List<Dto_Student> dto_students = _dto_students;
+        List<M_Student> dto_students = _dto_students;
         List<Student> students = new ArrayList<>(dto_students.size());
-        for (Dto_Student dto_student : dto_students) {
-            students.add(dto_student.toHib());
+        for (M_Student dto_student : dto_students) {
+            
+            Student student = dto_student.toHib();
+            students.add(student);
         }
-        _SYS.save_bulk(students);
+        this._SYS.save_bulk(students);
         return true;
     }
     
     public String read_Student(int id)
     {
-        Dto_Student dto_student = new Dto_Student(this._SYS.read_Student(id));
+        M_Student dto_student = new M_Student(this._SYS.read_Student(id));
         return this.JSON.toJson(dto_student);
     }
 
@@ -178,10 +172,10 @@ public class restCRUDFPS_REST {
     public String read_All_Student()
     {
         List<Student> students = this._SYS.read_All_Student();
-        List<Dto_Student> dto_students = new ArrayList<>(students.size());
+        List<M_Student> dto_students = new ArrayList<>(students.size());
         
         for (Student student : students) {
-            dto_students.add(new Dto_Student(student));
+            dto_students.add(new M_Student(student));
         }
         
         return this.JSON.toJson(dto_students);
@@ -203,7 +197,7 @@ public class restCRUDFPS_REST {
         }
         catch(NullPointerException npe)
         {
-            Msg info = new Msg("update_Student_S", "failed because of empty (msg) parameter");
+            M_Msg info = new M_Msg("update_Student_S", "failed because of empty (msg) parameter");
             npe.printStackTrace();
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
@@ -211,7 +205,7 @@ public class restCRUDFPS_REST {
         }
         catch( PropertyValueException pve )
         {
-            Msg info = new Msg("update_Student_S", "failed because a property which shouldn't be null is null");
+            M_Msg info = new M_Msg("update_Student_S", "failed because a property which shouldn't be null is null");
 
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
@@ -219,7 +213,7 @@ public class restCRUDFPS_REST {
         }
         catch(JsonSyntaxException jse)
         {
-            Msg info = new Msg("update_Student_S", "failed because server recieved a malformed json string");
+            M_Msg info = new M_Msg("update_Student_S", "failed because server recieved a malformed json string");
 
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
@@ -228,13 +222,13 @@ public class restCRUDFPS_REST {
 
         if(result)
         {
-            Msg info = new Msg("update_Student_S", "success");
+            M_Msg info = new M_Msg("update_Student_S", "success");
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
         }
         else
         {
-            Msg info = new Msg("update_Student_S", "failed");
+            M_Msg info = new M_Msg("update_Student_S", "failed");
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));        
         }
@@ -242,19 +236,18 @@ public class restCRUDFPS_REST {
 
     }        
     
-    
     public boolean update_Student_S( String _dto_student )
     {
-        Dto_Student dto_student = JSON.fromJson(_dto_student, Dto_Student.class);
-        Dto_Student_Update dto_student_update = new Dto_Student_Update(dto_student);        
+        M_Student dto_student = JSON.fromJson(_dto_student, M_Student.class);
+        M_Student_Update dto_student_update = new M_Student_Update(dto_student);        
         return update_Student(dto_student_update);
     }
     
-    public boolean update_Student( Dto_Student_Update _dto_student_update )
+    public boolean update_Student( M_Student_Update _dto_student_update )
     {
-        Dto_Student_Update dto_student_update = _dto_student_update;
+        M_Student_Update dto_student_update = _dto_student_update;
         Integer id = Integer.parseInt(dto_student_update.getId());
-        Student student = dto_student_update.getDto_student().toHib();
+        Student student = dto_student_update.getM_student().toHib();
         try{
             this._SYS.update_Student(id, student.getName());
         }
@@ -269,7 +262,6 @@ public class restCRUDFPS_REST {
     public void delete_Student_S(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-        System.out.println("In delete student");
         String _id = request
                     .getPathInfo()
                     .substring(1).replace(R_routes.route_delete_Student_S, "")
@@ -292,7 +284,7 @@ public class restCRUDFPS_REST {
         }
         catch(NullPointerException npe)
         {
-            Msg info = new Msg("delete_Student_S", "failed because of empty (msg) parameter");
+            M_Msg info = new M_Msg("delete_Student_S", "failed because of empty (msg) parameter");
             npe.printStackTrace();
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
@@ -300,7 +292,7 @@ public class restCRUDFPS_REST {
         }
         catch( PropertyValueException pve )
         {
-            Msg info = new Msg("delete_Student_S", "failed because a property which shouldn't be null is null");
+            M_Msg info = new M_Msg("delete_Student_S", "failed because a property which shouldn't be null is null");
 
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
@@ -308,7 +300,7 @@ public class restCRUDFPS_REST {
         }
         catch(JsonSyntaxException jse)
         {
-            Msg info = new Msg("delete_Student_S", "failed because server recieved a malformed json string");
+            M_Msg info = new M_Msg("delete_Student_S", "failed because server recieved a malformed json string");
 
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
@@ -316,7 +308,7 @@ public class restCRUDFPS_REST {
         }
         catch(IllegalArgumentException iae)
         {
-            Msg info = new Msg("delete_Student_S", "failed because server did not find an entry with id : " + id);
+            M_Msg info = new M_Msg("delete_Student_S", "failed because server did not find an entry with id : " + id);
 
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
@@ -325,13 +317,13 @@ public class restCRUDFPS_REST {
 
         if(result)
         {
-            Msg info = new Msg("delete_Student_S", "success");
+            M_Msg info = new M_Msg("delete_Student_S", "success");
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));
         }
         else
         {
-            Msg info = new Msg("delete_Student_S", "failed");
+            M_Msg info = new M_Msg("delete_Student_S", "failed");
             response.setContentType("application/json");
             response.getWriter().print(JSON.toJson(info));        
         }
@@ -364,24 +356,23 @@ public class restCRUDFPS_REST {
     public void print_info(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     
-       List<Dto_Info> info = new ArrayList<Dto_Info>();       
+       List<M_Info> info = new ArrayList<M_Info>();       
 
-       info.add(new Dto_Info("/"+R_routes.route_create_Student_S+"?msg=:student", "create_Student_S(:student)"));
-       info.add(new Dto_Info("/"+R_routes.route_create_Student_M+"?msg=:students", "create_Student_M(:students)"));
+       info.add(new M_Info("/"+R_routes.route_create_Student_S+"?msg=:student", "create_Student_S(:student)"));
+       info.add(new M_Info("/"+R_routes.route_create_Student_M+"?msg=:students", "create_Student_M(:students)"));
        
-       info.add(new Dto_Info("/"+R_routes.route_read_All_Student, "read_All_Student()"));
-       info.add(new Dto_Info("/"+R_routes.route_read_Student+"/:id", "read_Student(:id)"));
+       info.add(new M_Info("/"+R_routes.route_read_All_Student, "read_All_Student()"));
+       info.add(new M_Info("/"+R_routes.route_read_Student+"/:id", "read_Student(:id)"));
        
-       info.add(new Dto_Info("/"+R_routes.route_update_Student_S+"?msg=:student", "update_Student_S(:student)"));
+       info.add(new M_Info("/"+R_routes.route_update_Student_S+"?msg=:student", "update_Student_S(:student)"));
        
-       info.add(new Dto_Info("/"+R_routes.route_delete_Student_S+"/:id", "delete_Student_S(:id)"));
+       info.add(new M_Info("/"+R_routes.route_delete_Student_S+"/:id", "delete_Student_S(:id)"));
 
        response.setContentType("application/json");
        response.getWriter().print(JSON.toJson(info));
        
      }   
-    
-    
+
     private void sendTo(HttpServletRequest request, HttpServletResponse response, String url) throws ServletException, IOException {
             request.getRequestDispatcher(url).forward(request, response);
     }	

@@ -44,4 +44,29 @@ public class ClassFinder {
         return result;
     }
     
+    public static List<Class> getClasses_netbeans_web(String packageName)
+    {
+        List<Class> result = new ArrayList<Class>();
+        
+        String pkg = packageName.replace(".", "/");
+        
+        File directory = new File("./build/web/WEB-INF/classes/"+pkg);
+        
+        File[] files = directory.listFiles();
+          
+        for (File file : files) 
+        {              
+              if(file.getName().endsWith(".class"))
+              {    
+                  try {
+                      result.add(Class.forName(packageName + "." + file.getName().replace(".class", "")));
+                  } catch (ClassNotFoundException ex) {
+                      Logger.getLogger(ClassFinder.class.getName()).log(Level.SEVERE, null, ex);
+                  }
+              }
+                    
+        }
+          
+        return result;
+    }
 }

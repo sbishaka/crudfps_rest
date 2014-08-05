@@ -1,22 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-package com.database.rest;
+package com.database.rest.models;
 
-/**
- *
- * @author USER
- */
-public class Msg {
+public class M_Msg {
     
     String src;
     String text;
     
 
-    public Msg(String src, String text) {
+    public M_Msg(String src, String text) {
         this.src = src;
         this.text = text;
     }

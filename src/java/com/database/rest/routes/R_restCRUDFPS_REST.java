@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.database.rest.routes;
 
 import com.database.hibernateUtil.HibernateUtil;
@@ -17,10 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
-/**
- *
- * @author USER
- */
 @WebServlet(name = "R_restCRUDFPS_REST", urlPatterns = {"/crud/*"}, loadOnStartup = 1)
 public class R_restCRUDFPS_REST extends HttpServlet {
     
